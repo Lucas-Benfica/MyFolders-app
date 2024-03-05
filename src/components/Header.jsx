@@ -1,12 +1,10 @@
 import styled from "styled-components";
-import FOLDERSIMG from "../assets/foldersimg.png"
 import { Link } from "react-router-dom";
 
 export default function Header(){
     return (
         <HeaderContainer>
             <Logo>
-                <img src={FOLDERSIMG} alt="logo" />
                 <Link to="/folders">MyFolders</Link>
             </Logo>
         </HeaderContainer>
@@ -33,7 +31,8 @@ const Logo = styled.div`
     }
     a{
         font-family: 'Montserrat', sans-serif;
-        font-size: 22px;
+        font-size: 28px;
         text-decoration: none;
+        color: #fc466b;
     }
 `

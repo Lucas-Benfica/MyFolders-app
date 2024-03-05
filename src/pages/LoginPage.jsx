@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components"
 
 const URL = import.meta.env.VITE_API_URL;
@@ -7,7 +8,9 @@ const URL = import.meta.env.VITE_API_URL;
 export default function LoginPage() {
 
     const [userData, setUserData] = useState({ username: "", password: ""});
-    //const [disabled, setDisabled] = useState(false);
+    const [disabled, setDisabled] = useState(false);
+
+    const navigate = useNavigate();
 
     function updateLoginInfo(information, value) {
         setUserData(prevState => {
@@ -20,6 +23,7 @@ export default function LoginPage() {
 
     function submitUserData(ev) {
         ev.preventDefault();
+        setDisabled(true);
 
         axios.post(`${URL}/token`, {
             username: userData.username,
@@ -28,9 +32,13 @@ export default function LoginPage() {
             .then(response => {
                 console.log('Access Token:', response.data.access);
                 console.log('Refresh Token:', response.data.refresh);
+                setDisabled(false);
+                navigate('/folders');
             })
             .catch(error => {
                 console.error('Erro ao obter tokens:', error);
+                setDisabled(false);
+                alert("erro");
             });
     }
 
