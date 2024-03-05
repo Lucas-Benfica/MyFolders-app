@@ -7,7 +7,7 @@ const URL = import.meta.env.VITE_API_URL;
 export default function LoginPage() {
 
     const [userData, setUserData] = useState({ username: "", password: ""});
-    const [disabled, setDisabled] = useState(false);
+    //const [disabled, setDisabled] = useState(false);
 
     function updateLoginInfo(information, value) {
         setUserData(prevState => {
