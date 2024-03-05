@@ -51,7 +51,7 @@ export const Card = styled.div`
     font-size: 16px;
     font-weight: 500;
     color: #ffffff;
-    background: #3f5efb;
+    background: #073dd3cf;
     border-radius: 20px;
     display: flex;
     justify-content: flex-start;
@@ -60,6 +60,12 @@ export const Card = styled.div`
     align-items: center;
     cursor: pointer;
     transition: background 0.2s ease;
+
+    background: rgba(255,255,255,0.3);
+    border-left: 1px solid rgba(255,255,255,0.3);
+    border-top: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(10px);
+    box-shadow: 20px 20px 40px -6px rgba(0, 0, 0, 0.2);
 
     .icon {
         transition: transform 0.3s ease-in-out;
@@ -80,12 +86,18 @@ export const SubFolders = styled.div`
     font-size: 14px;
     font-weight: 400;
     color: #ffffff;
-    background: #fc466b;
+    //background: #fc466b;
     border-radius: 0 0 20px 20px;
     padding: 10px;
     margin-bottom: 10px;
     overflow: hidden;
     transition: height 1s ease;
+
+    background: rgba(255,255,255,0.3);
+    border-left: 1px solid rgba(255,255,255,0.3);
+    border-top: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(10px);
+    box-shadow: 20px 20px 40px -6px rgba(0, 0, 0, 0.2);
 
     .sub-icon {
         margin-right: 5px;

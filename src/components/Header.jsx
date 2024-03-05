@@ -32,7 +32,8 @@ const Logo = styled.div`
     a{
         font-family: 'Montserrat', sans-serif;
         font-size: 28px;
+        font-weight: 700;
         text-decoration: none;
-        color: #fc466b;
+        color: #ffffff;
     }
 `
