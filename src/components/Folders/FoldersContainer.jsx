@@ -2,9 +2,17 @@ import styled from "styled-components";
 import AddFolderBox from "./AddFolderBox";
 import FolderBox from "./FolderBox";
 import Title from "./Title";
+import { useEffect, useState } from "react";
 
 
-export default function FoldersContainer() {
+export default function FoldersContainer({folderInfo}) {
+
+    const [folder, setFolder] = useState();
+
+    useEffect(()=>{
+        //console.log("id");
+    },[folderInfo]);
+
     return (
             <Container>
                 <Title />

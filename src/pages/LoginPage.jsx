@@ -1,11 +1,10 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components"
 import useAuth from "../hooks/useAuth";
 import { ThreeDots } from "react-loader-spinner";
-
-const URL = import.meta.env.VITE_API_URL;
+import api from "../services/api";
+import refreshTokenHelper from "../helpers/refreshTokenHelper";
 
 export default function LoginPage() {
 
@@ -18,31 +17,13 @@ export default function LoginPage() {
     useEffect(() => {
         if (access && refresh) {
             setDisabled(true);
-            axios.post(`${URL}/token/verify`, {
-                token: access
-            })
-                .then(response => {
-                    setDisabled(false);
-                    navigate('/folders');
-                })
-                .catch(error => {
-                    axios.post(`${URL}/token/refresh`, {
-                        refresh: refresh
-                    })
-                        .then(response => {
-                            const auth = {
-                                access: response.data.access,
-                                refresh: refresh
-                            }
-                            signUp(auth);
-                            setDisabled(false);
-                            navigate('/folders');
-                        })
-                        .catch(error => {
-                            setDisabled(false);
-                            console.log("Refresh error");
-                        });
-                });
+            const token = refreshTokenHelper(access, refresh, signUp);
+            if(token){
+                setDisabled(false);
+                navigate('/folders');
+            }else{
+                setDisabled(false);
+            }
         }
     }, []);
 
@@ -59,20 +40,19 @@ export default function LoginPage() {
         ev.preventDefault();
         setDisabled(true);
 
-        axios.post(`${URL}/token`, {
+        const promise = api.signIn({
             username: userData.username,
             password: userData.password
-        })
-            .then(response => {
-                signUp(response.data);
-                setDisabled(false);
-                navigate('/folders');
-            })
-            .catch(error => {
-                console.error('Erro ao obter tokens:', error);
-                setDisabled(false);
-                alert("erro");
-            });
+        });
+        promise.then(response => {
+            signUp(response.data);
+            setDisabled(false);
+            navigate('/folders');
+        });
+        promise.catch(error => {
+            console.error('Erro ao obter tokens:', error);
+            setDisabled(false);
+        });
     }
 
     return (

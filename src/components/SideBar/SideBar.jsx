@@ -1,17 +1,39 @@
 import styled from "styled-components"
 import FolderCard from "./FolderCard"
+import { useEffect, useState } from "react"
+import useAuth from "../../hooks/useAuth";
+import refreshTokenHelper from "../../helpers/refreshTokenHelper";
+import api from "../../services/api";
 
-export default function SideBar(){
+export default function SideBar() {
+    const { access, refresh, signUp } = useAuth();
+
+    const [folders, setFolders] = useState(undefined);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const token = await refreshTokenHelper(access, refresh, signUp);
+
+                if (!token) return;
+
+                const response = await api.getDirectories(token);
+                setFolders(response.data);
+            } catch (error) {
+                console.log('Erro ao obter diretórios:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+
     return (
         <Sidebar>
             <Home>
                 All folders
             </Home>
-            <FolderCard />
-            <FolderCard />
-            <FolderCard />
-            <FolderCard />
-            <FolderCard />
+            {folders && folders.map(folder => <FolderCard key={folder.id} folder={folder} />)}
 
             <AddFolderButton>+</AddFolderButton>
         </Sidebar>

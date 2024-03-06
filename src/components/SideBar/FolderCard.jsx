@@ -1,45 +1,64 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IoIosArrowForward } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
+import api from "../../services/api";
+import refreshTokenHelper from "../../helpers/refreshTokenHelper";
 
-const example = [
-    { name: 'lucas' },
-    { name: 'pessoal' },
-    { name: 'arquivos' }
-];
+export default function FolderCard(props) {
+    const { folder } = props;
 
-export default function FolderCard() {
+    const [subFolders, setSubFolders] = useState(undefined);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!folder) return;
+
+            try {
+                const token = await refreshTokenHelper(access, refresh, signUp);
+
+                const response = await api.getDirectoryById(folder.id, token);
+                setSubFolders(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+
+
     const [showSubFolders, setShowSubFolders] = useState(false);
-
     const handleMouseEnter = () => {
         setShowSubFolders(true);
     };
-
     const handleMouseLeave = () => {
         setShowSubFolders(false);
     };
 
+    if (!folder) return (<></>);
+
     return (
         <>
-        <Card
-            className="open"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
-            <IoIosArrowForward className="icon" />
-            Others folders
-        </Card>
-        {showSubFolders && (
-            <SubFolders>
-                {example.map((subFolder, index) => (
-                    <div key={index}>
-                        <GoDotFill className="sub-icon" />
-                        {subFolder.name}
-                    </div>
-                ))}
-            </SubFolders>
-        )}
+            <Card
+                className="open"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+            >
+                <IoIosArrowForward className="icon" />
+                {folder.name}
+            </Card>
+            {(showSubFolders && subFolders) && (
+                <SubFolders>
+                    {subFolders.map((subFolder) => (
+                        <div key={subFolders.id}>
+                            <GoDotFill className="sub-icon" />
+                            {subFolder.name}
+                        </div>
+                    ))}
+                </SubFolders>
+            )}
         </>
     );
 }
@@ -86,7 +105,6 @@ export const SubFolders = styled.div`
     font-size: 14px;
     font-weight: 400;
     color: #ffffff;
-    //background: #fc466b;
     border-radius: 0 0 20px 20px;
     padding: 10px;
     margin-bottom: 10px;

@@ -2,14 +2,17 @@ import styled from "styled-components"
 import Header from "../components/Header"
 import SideBar from "../components/SideBar/SideBar"
 import FoldersContainer from "../components/Folders/FoldersContainer"
+import { useParams } from "react-router-dom"
 
 export default function FoldersPage(){
+    const { parentId, id } = useParams();
+
     return (
         <PageContainer>
             <Header />
             <Body>
                 <SideBar />
-                <FoldersContainer />
+                <FoldersContainer folderInfo={{ parentId, id }} />
             </Body>
         </PageContainer>
     )
@@ -30,4 +33,3 @@ const Body = styled.div`
     height: 100%;
     display: flex;
 `
-    //background: linear-gradient(45deg, #fc466b, #3f5efb);

@@ -11,6 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/folders" element={<FoldersPage />} />
+          <Route path="/folders/:parentId/:id" element={<FoldersPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
