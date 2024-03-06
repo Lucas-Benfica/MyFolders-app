@@ -17,12 +17,10 @@ export default function FoldersContainer({folderId, adding, setAdding}) {
             try {
                 const token = await refreshTokenHelper(access, refresh, signUp);
 
-                if (!token) return;
-
                 const response = await api.getDirectories(token);
 
                 if(folderId && response.data){
-                    const foldersList = response.data.filter( f => f.parent === folderId );
+                    const foldersList = response.data.filter( f => f.parent == folderId );
                     setFolders(foldersList);
                 }else{
                     setFolders(response.data);
@@ -34,7 +32,7 @@ export default function FoldersContainer({folderId, adding, setAdding}) {
         };
 
         fetchData();
-    },[folderId]);
+    },[folderId, adding]);
 
     return (
             <Container>

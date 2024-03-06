@@ -27,7 +27,7 @@ export default function AddFolderBox({ adding, setAdding }) {
                 parent: id ? Number(id) : null
             }, token);
 
-            console.log(response);
+            setNewFolder('');
             setAdding(false);
         } catch (error) {
             console.log(error);

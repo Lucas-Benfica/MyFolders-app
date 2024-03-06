@@ -2,18 +2,21 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IoIosArrowForward } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
+import { useNavigate } from "react-router-dom";
 
 export default function FolderCard(props) {
     const { folder, allFolders } = props;
-
+    const navigate = useNavigate();
     const [subFolders, setSubFolders] = useState(undefined);
 
     useEffect(() => {
         const subFoldersList = allFolders.filter( f => f.parent === folder.id);
         setSubFolders(subFoldersList);
-    }, []);
+    }, [allFolders]);
 
-
+    function navigateToFolder(){
+        navigate(`/folders/${folder.id}`);
+    }
 
     const [showSubFolders, setShowSubFolders] = useState(false);
     const handleMouseEnter = () => {
@@ -31,6 +34,7 @@ export default function FolderCard(props) {
                 className="open"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
+                onClick={navigateToFolder}
             >
                 <IoIosArrowForward className="icon" />
                 {folder.name}
@@ -38,7 +42,7 @@ export default function FolderCard(props) {
             {(showSubFolders && subFolders.length > 0) && (
                 <SubFolders>
                     {subFolders.map((subFolder) => (
-                        <div key={subFolders.id}>
+                        <div key={subFolder.id}>
                             <GoDotFill className="sub-icon" />
                             {subFolder.name}
                         </div>

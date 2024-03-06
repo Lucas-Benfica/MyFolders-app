@@ -3,56 +3,63 @@ import { FaFolder, FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 import { MdDriveFileRenameOutline, MdDeleteForever } from "react-icons/md";
 import { useState } from "react";
 import { FormCreate } from "./AddFolderBox";
+import { useNavigate } from "react-router-dom";
 
 
-export default function FolderBox({folder}) {
+export default function FolderBox({ folder }) {
 
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
+    const navigate = useNavigate();
 
-    function toggleEditing(){
-        if(deleting) return;
+    function toggleEditing() {
+        if (deleting) return;
         setEditing(true)
     }
-    function toggleDeleting(){
-        if(editing) return;
+    function toggleDeleting() {
+        if (editing) return;
         setDeleting(true)
     }
 
-    if(!folder) return (<></>);
+    function navigateToFolder(){
+        if(editing || deleting) return;
+
+        navigate(`/folders/${folder.id}`);
+    }
+    
+    if (!folder) return (<></>);
 
     return (
         <Box>
-                {editing ?
-                    <FormCreate>
-                        <input
-                            placeholder="Update folder name"
-                        />
-                        <button>
-                            <FaRegCheckCircle />
-                        </button>
-                    </FormCreate>
-                    : <div>
-                        <h1>{folder.name}</h1>
-                        <IconsBox>
-                            <MdDriveFileRenameOutline className="update" onClick={toggleEditing}/>
-                            <MdDeleteForever className="delete" onClick={toggleDeleting}/>
-                        </IconsBox>
-                    </div>}
-            <span>
+            {editing ?
+                <FormCreate>
+                    <input
+                        placeholder="Update folder name"
+                    />
+                    <button>
+                        <FaRegCheckCircle />
+                    </button>
+                </FormCreate>
+                : <div>
+                    <h1>{folder.name}</h1>
+                    <IconsBox>
+                        <MdDriveFileRenameOutline className="update" onClick={toggleEditing} />
+                        <MdDeleteForever className="delete" onClick={toggleDeleting} />
+                    </IconsBox>
+                </div>}
+            <button onClick={navigateToFolder}>
                 {
-                    deleting ? 
-                    <>
-                        <h2>Do you want to delete?</h2>
-                        <DeleteContainer>
-                            <FaRegCheckCircle className="confirm"/>
-                            <FaRegTimesCircle className="deny" />
-                        </DeleteContainer>
-                    </>
-                    : <FaFolder className="icon" />
+                    deleting ?
+                        <>
+                            <h2>Do you want to delete?</h2>
+                            <DeleteContainer>
+                                <FaRegCheckCircle className="confirm" />
+                                <FaRegTimesCircle className="deny" />
+                            </DeleteContainer>
+                        </>
+                        : <FaFolder className="icon" />
                 }
-                
-            </span>
+            </button>
         </Box>
     )
 }
@@ -80,7 +87,7 @@ const Box = styled.div`
         width: 150px;
         font-size: 19px;
         font-weight: 500;
-        text-align: center;
+        text-align: start;
         color: #5E5E5E;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -92,10 +99,11 @@ const Box = styled.div`
         text-align: center;
         color: #5E5E5E;
     }
-    span{
+    > button{
         width: 100%;
         height: 80%;
         border-radius: 10px;
+        border: none;
         background-color: #FFFFFF;
         display: flex;
         flex-direction: column;

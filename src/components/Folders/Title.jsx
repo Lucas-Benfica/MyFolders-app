@@ -39,7 +39,7 @@ export default function Title({ folderId, folders }) {
 
     return (
         <TitleFoldersContainer>
-            {info.parent && <FaArrowAltCircleUp className="icon" onClick={() => navigate(`/folders/${information.parent}`)} />}
+            {info.parent && <FaArrowAltCircleUp className="icon" onClick={() => navigate(`/folders/${info.parent}`)} />}
 
             <h1>{info.name}</h1>
         </TitleFoldersContainer>

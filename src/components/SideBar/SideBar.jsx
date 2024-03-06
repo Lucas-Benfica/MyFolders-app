@@ -1,13 +1,20 @@
 import styled from "styled-components"
 import FolderCard from "./FolderCard"
+import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react";
 
 export default function SideBar({setAdding, folders}) {
+    const navigate = useNavigate();
+    const [sideBarFolders, setSideBarFolders] = useState(folders);
+    useEffect(()=>{
+        setSideBarFolders(folders.filter( f => f.parent == null));
+    },[folders]);
     return (
         <Sidebar>
-            <Home>
+            <Home onClick={()=>navigate("/folders")}>
                 All folders
             </Home>
-            {folders && folders.map(folder => <FolderCard key={folder.id} folder={folder} allFolders={folders} />)}
+            {sideBarFolders && sideBarFolders.map(folder => <FolderCard key={folder.id} folder={folder} allFolders={folders} />)}
 
             <AddFolderButton onClick={()=>setAdding(true)}>+</AddFolderButton>
         </Sidebar>
