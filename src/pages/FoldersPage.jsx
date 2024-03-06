@@ -19,7 +19,6 @@ const PageContainer = styled.div`
     width: 100%;
     min-height: 100vh;
     height: 100%;
-    //background-color: #f8e4e8;
     background: linear-gradient(45deg, #fc466b, #3f5efb);
     font-family: 'Montserrat', sans-serif;
 

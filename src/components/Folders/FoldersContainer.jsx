@@ -1,10 +1,17 @@
 import styled from "styled-components";
+import AddFolderBox from "./AddFolderBox";
+import FolderBox from "./FolderBox";
+import Title from "./Title";
 
 
-export default function App() {
+export default function FoldersContainer() {
     return (
             <Container>
-                {/* Seu conteúdo aqui */}
+                <Title />
+                <div>
+                    <AddFolderBox />
+                    <FolderBox />
+                </div>
             </Container>
     );
 }
@@ -14,7 +21,14 @@ const Container = styled.div`
     min-height: calc(100vh - 64px);
     background-color: #FFFFFF;
     border-radius: 20px 0 0 0;
-    padding: 15px;
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+
+    div{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
 `;
-//ideia, colocar um por tras de forma que as letras fiquem transparentes 
-// e fiquem no gradiente, mas n sei se invento tanto 

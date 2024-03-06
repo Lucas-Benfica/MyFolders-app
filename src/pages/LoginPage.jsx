@@ -112,7 +112,7 @@ const FormLogin = styled.form`
         padding: 60px 0;
     }
 `
-const InputLogin = styled.input`
+export const InputLogin = styled.input`
     background: transparent;
     width: 65%;
     padding: 16px;
