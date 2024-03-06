@@ -109,6 +109,16 @@ const Box = styled.div`
     &:hover{
         background-color: #E6E6E6;
     }
+    @media (max-width: 500px) {
+        width: 100%;
+        height: 200px;
+        padding: 10px 5px 5px;
+
+        div {
+            width: 100%;
+            height: 70%;
+        }
+    }
 `
 export const FormCreate = styled.form`
     display: flex;
@@ -143,5 +153,14 @@ export const FormCreate = styled.form`
         background: transparent;
         color: #fc466b;
         cursor: pointer;
+    }
+
+    @media (max-width: 500px) {
+        input{
+            width: 75%;
+        }
+        button{
+            margin-right: 5px;
+        }
     }
 `;

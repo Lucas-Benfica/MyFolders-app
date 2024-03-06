@@ -175,6 +175,19 @@ const Box = styled.div`
             color: #E6E6E6;
         }
     }
+
+    @media (max-width: 500px) {
+        width: 100%;
+        height: 200px;
+        padding: 10px 5px 5px;
+        h1{
+            width: 50%;
+        }
+        > button {
+            width: 100%;
+            height: 75%;
+        }
+    }
 `
 
 const IconsBox = styled.div`
