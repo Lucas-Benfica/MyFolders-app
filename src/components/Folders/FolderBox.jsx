@@ -1,20 +1,55 @@
 import styled from "styled-components"
-import { FaFolder } from "react-icons/fa";
+import { FaFolder, FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 import { MdDriveFileRenameOutline, MdDeleteForever } from "react-icons/md";
+import { useState } from "react";
+import { FormCreate } from "./AddFolderBox";
 
 
-export default function FolderBox(){
-    return(
+export default function FolderBox() {
+
+    const [editing, setEditing] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+
+    function toggleEditing(){
+        if(deleting) return;
+        setEditing(true)
+    }
+    function toggleDeleting(){
+        if(editing) return;
+        setDeleting(true)
+    }
+
+    return (
         <Box>
-            <div>
-                <h1>FolderName</h1>
-                <IconsBox>
-                    <MdDriveFileRenameOutline className="update" />
-                    <MdDeleteForever className="delete"/>
-                </IconsBox>
-            </div>
+                {editing ?
+                    <FormCreate>
+                        <input
+                            placeholder="Update folder name"
+                        />
+                        <button>
+                            <FaRegCheckCircle />
+                        </button>
+                    </FormCreate>
+                    : <div>
+                        <h1>FolderName</h1>
+                        <IconsBox>
+                            <MdDriveFileRenameOutline className="update" onClick={toggleEditing}/>
+                            <MdDeleteForever className="delete" onClick={toggleDeleting}/>
+                        </IconsBox>
+                    </div>}
             <span>
-                <FaFolder className="icon"/>
+                {
+                    deleting ? 
+                    <>
+                        <h2>Do you want to delete?</h2>
+                        <DeleteContainer>
+                            <FaRegCheckCircle className="confirm"/>
+                            <FaRegTimesCircle className="deny" />
+                        </DeleteContainer>
+                    </>
+                    : <FaFolder className="icon" />
+                }
+                
             </span>
         </Box>
     )
@@ -49,12 +84,19 @@ const Box = styled.div`
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+    h2{
+        font-size: 15px;
+        font-weight: 400;
+        text-align: center;
+        color: #5E5E5E;
+    }
     span{
         width: 100%;
         height: 80%;
         border-radius: 10px;
         background-color: #FFFFFF;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         cursor: pointer;
@@ -82,5 +124,22 @@ const IconsBox = styled.div`
     .delete{
         font-size: 22px;
         cursor: pointer;
+    }
+`
+
+const DeleteContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 20px;
+
+    .confirm{
+        font-size: 50px;
+        color: green;
+    }
+    .deny{
+        font-size: 50px;
+        color: red;
     }
 `

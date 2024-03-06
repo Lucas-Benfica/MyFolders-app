@@ -72,7 +72,7 @@ const Box = styled.div`
         background-color: #E6E6E6;
     }
 `
-const FormCreate = styled.form`
+export const FormCreate = styled.form`
     display: flex;
     justify-content: space-between;
     align-items: center;
