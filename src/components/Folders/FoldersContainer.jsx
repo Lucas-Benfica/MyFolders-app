@@ -20,24 +20,25 @@ export default function FoldersContainer({folderId, adding, setAdding}) {
                 if (!token) return;
 
                 const response = await api.getDirectories(token);
-                setFolders(response.data);
+
+                if(folderId && response.data){
+                    const foldersList = response.data.filter( f => f.parent === folderId );
+                    setFolders(foldersList);
+                }else{
+                    setFolders(response.data);
+                }
+
             } catch (error) {
                 console.log('Erro ao obter diretórios:', error);
             }
         };
 
         fetchData();
-    },[]);
-    useEffect(()=>{
-        if(folderId){
-            const foldersList = folders.filter( f => f.parent === folderId );
-            setFolders(foldersList);
-        }
-    }, [])
+    },[folderId]);
 
     return (
             <Container>
-                <Title folderId={folderId} />
+                <Title folderId={folderId} folders={folders} />
                 <div>
                     <AddFolderBox adding={adding} setAdding={setAdding}/>
                     {folders && folders.map( f => <FolderBox key={f.id} folder={f} />)}

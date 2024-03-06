@@ -6,7 +6,7 @@ import api from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 
-export default function Title({ folderId }) {
+export default function Title({ folderId, folders }) {
     const { access, refresh, signUp } = useAuth();
 
     const navigate = useNavigate();
@@ -19,21 +19,23 @@ export default function Title({ folderId }) {
     });
 
     useEffect(() => {
-        if (!folderId) return;
+        if (!folders) return setInfo({id: 0, user: 0, name: "There is no folder yet", parent: null});
+        if (!folderId) return setInfo({id: 0, user: 0, name: "All folders", parent: null});
 
         const fetchData = async () => {
             try {
                 const token = await refreshTokenHelper(access, refresh, signUp);
 
                 const response = await api.getDirectoryById(folderId, token);
-                setInfo(response.data);
+
+                setInfo(response.data[0]);
             } catch (error) {
                 console.log(error);
             }
         };
 
         fetchData();
-    }, []);
+    }, [folderId]);
 
     return (
         <TitleFoldersContainer>
