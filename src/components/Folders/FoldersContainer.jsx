@@ -3,22 +3,44 @@ import AddFolderBox from "./AddFolderBox";
 import FolderBox from "./FolderBox";
 import Title from "./Title";
 import { useEffect, useState } from "react";
+import refreshTokenHelper from "../../helpers/refreshTokenHelper";
+import api from "../../services/api";
+import useAuth from "../../hooks/useAuth";
 
 
-export default function FoldersContainer({folderInfo}) {
-
-    const [folder, setFolder] = useState();
+export default function FoldersContainer({folderId, adding, setAdding}) {
+    const { access, refresh, signUp } = useAuth();
+    const [folders, setFolders] = useState();
 
     useEffect(()=>{
-        //console.log("id");
-    },[folderInfo]);
+        const fetchData = async () => {
+            try {
+                const token = await refreshTokenHelper(access, refresh, signUp);
+
+                if (!token) return;
+
+                const response = await api.getDirectories(token);
+                setFolders(response.data);
+            } catch (error) {
+                console.log('Erro ao obter diretórios:', error);
+            }
+        };
+
+        fetchData();
+    },[]);
+    useEffect(()=>{
+        if(folderId){
+            const foldersList = folders.filter( f => f.parent === folderId );
+            setFolders(foldersList);
+        }
+    }, [])
 
     return (
             <Container>
-                <Title />
+                <Title folderId={folderId} />
                 <div>
-                    <AddFolderBox />
-                    <FolderBox />
+                    <AddFolderBox adding={adding} setAdding={setAdding}/>
+                    {folders && folders.map( f => <FolderBox key={f.id} folder={f} />)}
                 </div>
             </Container>
     );

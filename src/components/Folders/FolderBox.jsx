@@ -5,7 +5,7 @@ import { useState } from "react";
 import { FormCreate } from "./AddFolderBox";
 
 
-export default function FolderBox() {
+export default function FolderBox({folder}) {
 
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -19,6 +19,8 @@ export default function FolderBox() {
         setDeleting(true)
     }
 
+    if(!folder) return (<></>);
+
     return (
         <Box>
                 {editing ?
@@ -31,7 +33,7 @@ export default function FolderBox() {
                         </button>
                     </FormCreate>
                     : <div>
-                        <h1>FolderName</h1>
+                        <h1>{folder.name}</h1>
                         <IconsBox>
                             <MdDriveFileRenameOutline className="update" onClick={toggleEditing}/>
                             <MdDeleteForever className="delete" onClick={toggleDeleting}/>

@@ -1,11 +1,8 @@
-import { useState } from "react"
 import styled from "styled-components"
 import { FaFolderPlus } from "react-icons/fa6"
 import { FaRegCheckCircle } from "react-icons/fa";
 
-export default function AddFolderBox() {
-
-    const [adding, setAdding] = useState(false);
+export default function AddFolderBox({adding, setAdding}) {
 
     if(adding){
         return (
