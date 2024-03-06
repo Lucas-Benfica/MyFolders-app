@@ -33,7 +33,7 @@ export default function SideBar() {
             <Home>
                 All folders
             </Home>
-            {folders && folders.map(folder => <FolderCard key={folder.id} folder={folder} />)}
+            {folders && folders.map(folder => <FolderCard key={folder.id} folder={folder} allFolders={folders} />)}
 
             <AddFolderButton>+</AddFolderButton>
         </Sidebar>

@@ -2,29 +2,15 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IoIosArrowForward } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
-import api from "../../services/api";
-import refreshTokenHelper from "../../helpers/refreshTokenHelper";
 
 export default function FolderCard(props) {
-    const { folder } = props;
+    const { folder, allFolders } = props;
 
     const [subFolders, setSubFolders] = useState(undefined);
 
     useEffect(() => {
-        const fetchData = async () => {
-            if (!folder) return;
-
-            try {
-                const token = await refreshTokenHelper(access, refresh, signUp);
-
-                const response = await api.getDirectoryById(folder.id, token);
-                setSubFolders(response.data);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-        fetchData();
+        const subFoldersList = allFolders.filter( f => f.parent === folder.id);
+        setSubFolders(subFoldersList);
     }, []);
 
 
@@ -49,7 +35,7 @@ export default function FolderCard(props) {
                 <IoIosArrowForward className="icon" />
                 {folder.name}
             </Card>
-            {(showSubFolders && subFolders) && (
+            {(showSubFolders && subFolders.length > 0) && (
                 <SubFolders>
                     {subFolders.map((subFolder) => (
                         <div key={subFolders.id}>
