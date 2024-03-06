@@ -6,6 +6,8 @@ import api from "../../services/api";
 import useAuth from "../../hooks/useAuth";
 import refreshTokenHelper from "../../helpers/refreshTokenHelper";
 import { useParams } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddFolderBox({ adding, setAdding }) {
     const { access, refresh, signUp } = useAuth();
@@ -27,10 +29,12 @@ export default function AddFolderBox({ adding, setAdding }) {
                 parent: id ? Number(id) : null
             }, token);
 
+            toast.success('Folder created successfully', { position: 'top-right' });
             setNewFolder('');
             setAdding(false);
         } catch (error) {
             console.log(error);
+            toast.error('Failed to create folder', { position: 'top-right' });
         } finally {
             setDisabled(false);
         }

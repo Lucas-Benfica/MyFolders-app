@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import refreshTokenHelper from "../../helpers/refreshTokenHelper";
 import api from "../../services/api";
 import useAuth from "../../hooks/useAuth";
+import { ToastContainer } from "react-toastify";
 
 
 export default function FoldersContainer({folderId, adding, setAdding, reloadFolders, setReloadFolders}) {
@@ -41,6 +42,19 @@ export default function FoldersContainer({folderId, adding, setAdding, reloadFol
                     <AddFolderBox adding={adding} setAdding={setAdding}/>
                     {folders && folders.map( f => <FolderBox key={f.id} folder={f} setReloadFolders={setReloadFolders} />)}
                 </div>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={2000}
+                    limit={3}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
             </Container>
     );
 }

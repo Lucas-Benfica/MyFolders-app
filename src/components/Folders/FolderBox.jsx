@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import refreshTokenHelper from "../../helpers/refreshTokenHelper";
 import useAuth from "../../hooks/useAuth";
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function FolderBox({ folder, setReloadFolders }) {
     const { access, refresh, signUp } = useAuth();
@@ -40,35 +41,39 @@ export default function FolderBox({ folder, setReloadFolders }) {
         ev.preventDefault();
         try {
             const token = await refreshTokenHelper(access, refresh, signUp);
-
+    
             const { id, ...folderWithoutId } = folder;
-
+    
             const updatedFolder = {
                 ...folderWithoutId,
                 name: newName,
             };
-
+    
             const response = await api.patchDirectory(updatedFolder, id, token);
-
+    
+            toast.success('Folder name updated', { position: 'top-right' });
             setName(newName);
             setNewName('');
             setReloadFolders("update");
             setEditing(false);
-
+    
         } catch (error) {
             console.log(error);
+            toast.error('Failed to update folder name', { position: 'top-right' });
         }
     }
     async function deleteFolder() {
         try {
             const token = await refreshTokenHelper(access, refresh, signUp);
-
+    
             const response = await api.deleteDirectory(folder.id, token);
-
+    
+            toast.success('Folder deleted successfully', { position: 'top-right' });
             setReloadFolders('delete');
             setDeleting(false);
         } catch (error) {
             console.log(error);
+            toast.error('Failed to delete folder', { position: 'top-right' });
         }
     }
 
