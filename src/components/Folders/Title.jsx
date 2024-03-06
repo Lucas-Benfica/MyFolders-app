@@ -35,7 +35,7 @@ export default function Title({ folderId, folders }) {
         };
 
         fetchData();
-    }, [folderId]);
+    }, [folderId, folders]);
 
     return (
         <TitleFoldersContainer>

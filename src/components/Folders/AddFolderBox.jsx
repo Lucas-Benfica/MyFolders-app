@@ -1,29 +1,66 @@
 import styled from "styled-components"
 import { FaFolderPlus } from "react-icons/fa6"
 import { FaRegCheckCircle } from "react-icons/fa";
+import { useState } from "react";
+import api from "../../services/api";
+import useAuth from "../../hooks/useAuth";
+import refreshTokenHelper from "../../helpers/refreshTokenHelper";
+import { useParams } from "react-router-dom";
 
-export default function AddFolderBox({adding, setAdding}) {
+export default function AddFolderBox({ adding, setAdding }) {
+    const { access, refresh, signUp } = useAuth();
+    const { id } = useParams();
 
-    if(adding){
+    const [newFolder, setNewFolder] = useState("");
+    const [disabled, setDisabled] = useState(false);
+
+    async function submitNewFolder(ev) {
+        ev.preventDefault();
+        setDisabled(true);
+
+        try {
+            const token = await refreshTokenHelper(access, refresh, signUp);
+
+            const response = await api.postDirectories({
+                user: 0,
+                name: newFolder,
+                parent: id ? Number(id) : null
+            }, token);
+
+            console.log(response);
+            setAdding(false);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setDisabled(false);
+        }
+    }
+
+
+    if (adding) {
         return (
             <Box>
-                <FormCreate>
-                    <input 
+                <FormCreate onSubmit={submitNewFolder}>
+                    <input
+                        type="text"
                         placeholder="Enter the folder name"
+                        value={newFolder}
+                        disabled={disabled}
+                        onChange={(ev) => setNewFolder(ev.target.value)}
                     />
-                    <button>
+                    <button type="submit" disabled={disabled}>
                         <FaRegCheckCircle />
                     </button>
                 </FormCreate>
                 <div>
-                    <FaFolderPlus className="icon" />
+                    <FaFolderPlus className="icon" onClick={() => setAdding(!adding)} />
                 </div>
             </Box>
         )
     }
-    
+
     return (
-        <Box onClick={()=>setAdding(true)}>
+        <Box onClick={() => setAdding(true)}>
             <h1>Add new folder</h1>
             <div>
                 <FaFolderPlus className="icon" />

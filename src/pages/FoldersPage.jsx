@@ -30,7 +30,7 @@ export default function FoldersPage(){
         };
 
         fetchData();
-    }, [id]);
+    }, [id, adding]);
 
     return (
         <PageContainer>
