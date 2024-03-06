@@ -32,6 +32,7 @@ export default function LoginPage() {
             .then(response => {
                 console.log('Access Token:', response.data.access);
                 console.log('Refresh Token:', response.data.refresh);
+                console.log(response);
                 setDisabled(false);
                 navigate('/folders');
             })
