@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { FaFolder, FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 import { MdDriveFileRenameOutline, MdDeleteForever } from "react-icons/md";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FormCreate } from "./AddFolderBox";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
@@ -9,7 +9,7 @@ import refreshTokenHelper from "../../helpers/refreshTokenHelper";
 import useAuth from "../../hooks/useAuth";
 
 
-export default function FolderBox({ folder }) {
+export default function FolderBox({ folder, setReloadFolders }) {
     const { access, refresh, signUp } = useAuth();
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -17,8 +17,6 @@ export default function FolderBox({ folder }) {
     const [name, setName] = useState(folder.name);
 
     const navigate = useNavigate();
-
-    useEffect(()=>{}, [editing]);
 
     function toggleEditing() {
         if (deleting) return;
@@ -54,7 +52,21 @@ export default function FolderBox({ folder }) {
 
             setName(newName);
             setNewName('');
+            setReloadFolders("update");
             setEditing(false);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    async function deleteFolder() {
+        try {
+            const token = await refreshTokenHelper(access, refresh, signUp);
+
+            const response = await api.deleteDirectory(folder.id, token);
+
+            setReloadFolders('delete');
+            setDeleting(false);
         } catch (error) {
             console.log(error);
         }
@@ -89,8 +101,8 @@ export default function FolderBox({ folder }) {
                         <>
                             <h2>Do you want to delete?</h2>
                             <DeleteContainer>
-                                <FaRegCheckCircle className="confirm" />
-                                <FaRegTimesCircle className="deny" />
+                                <FaRegCheckCircle className="confirm" onClick={deleteFolder}/>
+                                <FaRegTimesCircle className="deny" onClick={()=>setDeleting(false)}/>
                             </DeleteContainer>
                         </>
                         : <FaFolder className="icon" />

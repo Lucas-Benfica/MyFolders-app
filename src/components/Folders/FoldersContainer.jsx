@@ -8,10 +8,10 @@ import api from "../../services/api";
 import useAuth from "../../hooks/useAuth";
 
 
-export default function FoldersContainer({folderId, adding, setAdding}) {
+export default function FoldersContainer({folderId, adding, setAdding, reloadFolders, setReloadFolders}) {
     const { access, refresh, signUp } = useAuth();
     const [folders, setFolders] = useState();
-
+    
     useEffect(()=>{
         const fetchData = async () => {
             try {
@@ -32,14 +32,14 @@ export default function FoldersContainer({folderId, adding, setAdding}) {
         };
 
         fetchData();
-    },[folderId, adding]);
+    },[folderId, adding, reloadFolders]);
 
     return (
             <Container>
                 <Title folderId={folderId} folders={folders} />
                 <div>
                     <AddFolderBox adding={adding} setAdding={setAdding}/>
-                    {folders && folders.map( f => <FolderBox key={f.id} folder={f} />)}
+                    {folders && folders.map( f => <FolderBox key={f.id} folder={f} setReloadFolders={setReloadFolders} />)}
                 </div>
             </Container>
     );

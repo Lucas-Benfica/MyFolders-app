@@ -14,6 +14,7 @@ export default function FoldersPage(){
     const { id } = useParams();
     const [adding, setAdding] = useState(false);
     const [folders, setFolders] = useState(undefined);
+    const [reloadFolders, setReloadFolders] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,14 +31,16 @@ export default function FoldersPage(){
         };
 
         fetchData();
-    }, [id, adding]);
+    }, [id, adding, reloadFolders]);
 
     return (
         <PageContainer>
             <Header />
             <Body>
                 <SideBar setAdding={setAdding} folders={folders}/>
-                <FoldersContainer folderId={id} adding={adding} setAdding={setAdding}/>
+                <FoldersContainer 
+                    folderId={id} adding={adding} setAdding={setAdding} 
+                    reloadFolders={reloadFolders} setReloadFolders={setReloadFolders}/>
             </Body>
         </PageContainer>
     )
