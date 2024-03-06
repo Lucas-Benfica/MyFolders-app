@@ -1,16 +1,50 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components"
+import useAuth from "../hooks/useAuth";
+import { ThreeDots } from "react-loader-spinner";
 
 const URL = import.meta.env.VITE_API_URL;
 
 export default function LoginPage() {
 
-    const [userData, setUserData] = useState({ username: "", password: ""});
+    const [userData, setUserData] = useState({ username: "", password: "" });
     const [disabled, setDisabled] = useState(false);
 
+    const { access, refresh, signUp } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (access && refresh) {
+            setDisabled(true);
+            axios.post(`${URL}/token/verify`, {
+                token: access
+            })
+                .then(response => {
+                    setDisabled(false);
+                    navigate('/folders');
+                })
+                .catch(error => {
+                    axios.post(`${URL}/token/refresh`, {
+                        refresh: refresh
+                    })
+                        .then(response => {
+                            const auth = {
+                                access: response.data.access,
+                                refresh: refresh
+                            }
+                            signUp(auth);
+                            setDisabled(false);
+                            navigate('/folders');
+                        })
+                        .catch(error => {
+                            setDisabled(false);
+                            console.log("Refresh error");
+                        });
+                });
+        }
+    }, []);
 
     function updateLoginInfo(information, value) {
         setUserData(prevState => {
@@ -30,9 +64,7 @@ export default function LoginPage() {
             password: userData.password
         })
             .then(response => {
-                console.log('Access Token:', response.data.access);
-                console.log('Refresh Token:', response.data.refresh);
-                console.log(response);
+                signUp(response.data);
                 setDisabled(false);
                 navigate('/folders');
             })
@@ -51,6 +83,7 @@ export default function LoginPage() {
                     id="username"
                     placeholder="Username"
                     required
+                    disabled={disabled}
                     value={userData.username}
                     onChange={ev => updateLoginInfo('username', ev.target.value)}
                 />
@@ -59,10 +92,25 @@ export default function LoginPage() {
                     type="password"
                     placeholder="Password"
                     required
+                    disabled={disabled}
                     value={userData.password}
                     onChange={ev => updateLoginInfo('password', ev.target.value)}
                 />
-                <SubmitButton type="submit">Sign in</SubmitButton>
+                <SubmitButton type="submit" disabled={disabled}>
+                    {(disabled) ?
+                        <ThreeDots
+                            height="35"
+                            width="35"
+                            radius="9"
+                            color="#FFFFFF"
+                            ariaLabel="three-dots-loading"
+                            wrapperStyle={{}}
+                            wrapperClassName=""
+                            visible={true}
+                        />
+                        : 'Sign in'
+                    }
+                </SubmitButton>
                 <h2>*Sign in to access your folders.</h2>
             </FormLogin>
         </Login>
@@ -146,6 +194,7 @@ export const InputLogin = styled.input`
 `
 const SubmitButton = styled.button`
     width: 40%;
+    height: 50px;
     font-size: 16px;
     background: transparent;
     padding: 16px;
@@ -161,6 +210,10 @@ const SubmitButton = styled.button`
     font-weight: 500;
     transition: all 0.2s ease-in-out;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     &:hover {
         background: rgba(255, 255, 255, 0.1);
         box-shadow: 4px 4px 60px 8px rgba(0, 0, 0, 0.2);

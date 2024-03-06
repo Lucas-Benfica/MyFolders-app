@@ -16,9 +16,16 @@ export function AuthProvider({children}){
         setRefresh(refresh);
         localStorage.setItem("refresh", JSON.stringify(refresh));
     }
+    function logout(){
+        setAccess('');
+        setRefresh('');
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+    }
+    
 
     return (
-        <AuthContext.Provider value={{access, refresh, signUp}}>
+        <AuthContext.Provider value={{access, refresh, signUp, logout}}>
             {children}
         </AuthContext.Provider>
     )

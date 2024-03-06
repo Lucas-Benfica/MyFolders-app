@@ -1,16 +1,19 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import LoginPage from "./pages/LoginPage"
 import FoldersPage from "./pages/FoldersPage"
+import { AuthProvider } from "./contexts/AuthContext"
 
 function App() {
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/folders" element={<FoldersPage />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/folders" element={<FoldersPage />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 
