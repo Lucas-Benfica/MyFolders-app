@@ -1,47 +1,83 @@
 import styled from "styled-components"
 import { FaFolder, FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 import { MdDriveFileRenameOutline, MdDeleteForever } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormCreate } from "./AddFolderBox";
 import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
+import refreshTokenHelper from "../../helpers/refreshTokenHelper";
+import useAuth from "../../hooks/useAuth";
 
 
 export default function FolderBox({ folder }) {
-
+    const { access, refresh, signUp } = useAuth();
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
+    const [newName, setNewName] = useState(folder.name);
+    const [name, setName] = useState(folder.name);
+
     const navigate = useNavigate();
+
+    useEffect(()=>{}, [editing]);
 
     function toggleEditing() {
         if (deleting) return;
-        setEditing(true)
+        setEditing(true);
     }
     function toggleDeleting() {
         if (editing) return;
-        setDeleting(true)
+        setDeleting(!deleting);
     }
 
-    function navigateToFolder(){
-        if(editing || deleting) return;
+    function navigateToFolder() {
+        if (editing || deleting) {
+            setEditing(false);
+            return;
+        };
 
         navigate(`/folders/${folder.id}`);
     }
-    
+
+    async function updateFolderName(ev) {
+        ev.preventDefault();
+        try {
+            const token = await refreshTokenHelper(access, refresh, signUp);
+
+            const { id, ...folderWithoutId } = folder;
+
+            const updatedFolder = {
+                ...folderWithoutId,
+                name: newName,
+            };
+
+            const response = await api.patchDirectory(updatedFolder, id, token);
+
+            setName(newName);
+            setNewName('');
+            setEditing(false);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     if (!folder) return (<></>);
 
     return (
         <Box>
             {editing ?
-                <FormCreate>
+                <FormCreate onSubmit={updateFolderName}>
                     <input
+                        type="text"
                         placeholder="Update folder name"
+                        value={newName}
+                        onChange={(ev) => setNewName(ev.target.value)}
                     />
-                    <button>
+                    <button type="submit">
                         <FaRegCheckCircle />
                     </button>
                 </FormCreate>
                 : <div>
-                    <h1>{folder.name}</h1>
+                    <h1>{name}</h1>
                     <IconsBox>
                         <MdDriveFileRenameOutline className="update" onClick={toggleEditing} />
                         <MdDeleteForever className="delete" onClick={toggleDeleting} />

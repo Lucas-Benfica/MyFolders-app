@@ -7,6 +7,7 @@ export default function SideBar({setAdding, folders}) {
     const navigate = useNavigate();
     const [sideBarFolders, setSideBarFolders] = useState(folders);
     useEffect(()=>{
+        if(!folders) return;
         setSideBarFolders(folders.filter( f => f.parent == null));
     },[folders]);
     return (
